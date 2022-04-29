@@ -9,30 +9,44 @@ import UIKit
 
 class Bubble: UIButton {
     
-    let xPosition = Int.random(in: 20...400)
-    let yPosition = Int.random(in: 20...800)
+    // value of the bubble
+    var score: Int = 0
     
-    init(area: UIView) {
-        print(area.frame.size)
-        super.init(frame: area.frame)
-        self.backgroundColor = .red
+    init(area: CGRect) {
+    
+        super.init(frame: area)
+        
+        // used for probabilities
+        let value: Int = Int.random(in: 1...100)
+        
+        // set the bubble's score and colour based on the probability
+        if 0...40 ~= value {
+            self.backgroundColor = .systemRed
+            self.score = 1
+        } else if 41...70 ~= value  {
+            self.backgroundColor = UIColor(red: 1.0, green: 0.5, blue: 0.7, alpha: 1.0)
+            self.score = 2
+        } else if 71...85 ~= value {
+            self.backgroundColor = .systemGreen
+            self.score = 5
+        } else if 86...95 ~= value {
+            self.backgroundColor = .systemBlue
+            self.score = 8
+        } else {
+            self.backgroundColor = .black
+            self.score = 10
+        }
+        
+        // round the bubble
+        self.layer.cornerRadius = 0.5 * self.bounds.size.width
+        
+        
     }
-    
-//     override init(frame: CGRect) {
-//        super.init(frame: frame)
-//
-//        //self.frame = area.frame
-//        self.backgroundColor = .red
-//        self.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-//        self.layer.cornerRadius = 0.5 * self.bounds.size.width
-//    }
-//
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-   
     func animation() {
         let springAnimation = CASpringAnimation(keyPath: "transform.scale")
         springAnimation.duration = 0.6
