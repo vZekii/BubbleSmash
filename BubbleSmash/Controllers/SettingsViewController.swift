@@ -21,6 +21,10 @@ class SettingsViewController: UIViewController {
         
         // Add an event handler to ensure the player puts in a name
         nameTextField.addTarget(self, action: #selector(nameFieldChanged(_:)), for: .editingChanged)
+        
+        // add tap handling to leave the keyboard when entering a name on phone
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        view.addGestureRecognizer(tap)
     }
     
     // function to track the name field
@@ -35,6 +39,11 @@ class SettingsViewController: UIViewController {
         startButton.isEnabled = true
     }
     
+    // function to dismiss the keyboard when on phone
+    @objc func handleTap() {
+        nameTextField.resignFirstResponder()
+    }
+    
     // simple function to update the label text under the game time slider
     @IBAction func timeSliderValueChanged(_ sender: UISlider) {
         let num = Int(sender.value);
@@ -46,7 +55,7 @@ class SettingsViewController: UIViewController {
         bubbleSliderLabel.text = "\(num)";
     }
     
-    
+    // change the screen to the game screen, bringing across the settings
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToGame" {
             let VC = segue.destination as! GameViewController;

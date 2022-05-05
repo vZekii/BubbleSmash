@@ -24,7 +24,7 @@ class Bubble: UIButton {
             self.backgroundColor = .systemRed
             self.score = 1
         } else if 41...70 ~= value  {
-            self.backgroundColor = UIColor(red: 1.0, green: 0.5, blue: 0.7, alpha: 1.0)
+            self.backgroundColor = UIColor(red: 1.0, green: 0.5, blue: 0.7, alpha: 1.0) // add a custom colour because the system pink sucks
             self.score = 2
         } else if 71...85 ~= value {
             self.backgroundColor = .systemGreen
@@ -47,6 +47,7 @@ class Bubble: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // animation for the bubble spawning in
     func animation() {
         let springAnimation = CASpringAnimation(keyPath: "transform.scale")
         springAnimation.duration = 0.6

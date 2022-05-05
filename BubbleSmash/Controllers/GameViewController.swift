@@ -19,6 +19,7 @@ class GameViewController: UIViewController {
     var remainingTime: Int = 60 // Set some default values
     var amountOfBubbles: Int = 15 // another one here
     var timer = Timer()
+    var countdown = Timer()
     var bubbles: [Bubble] = []
     var previousBubble: Int = 0 // used to track the bubble combo
         
@@ -30,13 +31,51 @@ class GameViewController: UIViewController {
         remainingTimeLabel.text = String(remainingTime)
         highscoreLabel.text = "\(UDM.shared.getHighScore())"
         
-        // activate the timer, removing and generating bubbles every second
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {
-            timer in
-            self.removeBubbles()
-            self.generateBubbles()
-            self.counting()
+        // show a 3 second countdown
+        showCountdown()
+        
+        // wait for the countdown to go away
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            // activate the timer, removing and generating bubbles every second
+            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {
+                timer in
+                self.removeBubbles()
+                self.generateBubbles()
+                self.counting()
+            }
         }
+    }
+    
+    // shows a 3 second countdown before the game starts
+    func showCountdown() {
+        var count = 3
+        
+        // greyed out background
+        let background = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        background.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+    
+        // number text on the background
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 120)
+        label.textAlignment = .center
+        label.text = "\(count)"
+        
+        // add them together and then to the view
+        background.addSubview(label)
+        view.addSubview(background)
+        
+        // countdown to 0
+        countdown = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { countdown in
+            // when its at 0, stop the timer and go back to start the game
+            guard count > 0 else {
+                countdown.invalidate()
+                background.removeFromSuperview()
+                return
+            }
+            count -= 1
+            label.text = "\(count)"
+        })
     }
     
     // If they press back while playing, stop the timer
